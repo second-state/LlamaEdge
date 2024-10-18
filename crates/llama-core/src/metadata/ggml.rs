@@ -44,6 +44,11 @@ impl GgmlMetadataBuilder {
         self
     }
 
+    pub fn enable_parallel_tool_calls(mut self, enable: bool) -> Self {
+        self.metadata.parallel_tool_calls = enable;
+        self
+    }
+
     pub fn with_n_predict(mut self, n: u64) -> Self {
         self.metadata.n_predict = n;
         self
@@ -164,6 +169,10 @@ pub struct GgmlMetadata {
     // pub stream_stdout: bool,
     #[serde(rename = "embedding")]
     pub embeddings: bool,
+
+    #[serde(rename = "parallel-tool-calls")]
+    pub parallel_tool_calls: bool,
+
     #[serde(rename = "n-predict")]
     pub n_predict: u64,
     #[serde(skip_serializing_if = "Option::is_none", rename = "reverse-prompt")]
@@ -225,6 +234,7 @@ impl Default for GgmlMetadata {
             prompt_template: PromptTemplateType::Llama2Chat,
             log_enable: false,
             embeddings: false,
+            parallel_tool_calls: false,
             n_predict: 1024,
             reverse_prompt: None,
             mmproj: None,

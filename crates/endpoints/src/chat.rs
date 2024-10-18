@@ -176,6 +176,7 @@ impl ChatCompletionRequestBuilder {
                 temperature: None,
                 top_p: None,
                 n_choice: None,
+                parallel_tool_calls: None,
                 stream: None,
                 stream_options: None,
                 stop: None,
@@ -211,6 +212,13 @@ impl ChatCompletionRequestBuilder {
     pub fn with_n_choices(mut self, n: u64) -> Self {
         let n_choice = if n < 1 { 1 } else { n };
         self.req.n_choice = Some(n_choice);
+        self
+    }
+
+
+    /// Enable parallel_tool_calls
+    pub fn enable_parallel_tool_calls(mut self, flag: bool) -> Self {
+        self.req.parallel_tool_calls = Some(flag);
         self
     }
 
@@ -326,6 +334,10 @@ pub struct ChatCompletionRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "n")]
     pub n_choice: Option<u64>,
+    /// [parallel function calling](https://platform.openai.com/docs/guides/function-calling/parallel-function-calling during tool use.
+    /// Default to false.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parallel_tool_calls: Option<bool>,
     /// Whether to stream the results as they are generated. Useful for chatbots.
     /// Defaults to false.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -403,6 +415,7 @@ impl<'de> Deserialize<'de> for ChatCompletionRequest {
                 let mut temperature = None;
                 let mut top_p = None;
                 let mut n_choice = None;
+                let mut parallel_tool_calls = None;
                 let mut stream = None;
                 let mut stream_options = None;
                 let mut stop = None;
@@ -424,6 +437,7 @@ impl<'de> Deserialize<'de> for ChatCompletionRequest {
                         "temperature" => temperature = map.next_value()?,
                         "top_p" => top_p = map.next_value()?,
                         "n" => n_choice = map.next_value()?,
+                        "parallel_tool_calls" => parallel_tool_calls = map.next_value()?,
                         "stream" => stream = map.next_value()?,
                         "stream_options" => stream_options = map.next_value()?,
                         "stop" => stop = map.next_value()?,
@@ -464,6 +478,10 @@ impl<'de> Deserialize<'de> for ChatCompletionRequest {
                     n_choice = Some(1);
                 }
 
+                if parallel_tool_calls.is_none() {
+                    parallel_tool_calls = Some(false);
+                }
+
                 if stream.is_none() {
                     stream = Some(false);
                 }
@@ -475,6 +493,7 @@ impl<'de> Deserialize<'de> for ChatCompletionRequest {
                     temperature,
                     top_p,
                     n_choice,
+                    parallel_tool_calls,
                     stream,
                     stream_options,
                     stop,
@@ -498,6 +517,7 @@ impl<'de> Deserialize<'de> for ChatCompletionRequest {
             "temperature",
             "top_p",
             "n",
+            "parallel_tool_calls",
             "stream",
             "stream_options",
             "stop",

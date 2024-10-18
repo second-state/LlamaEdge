@@ -1803,6 +1803,14 @@ async fn check_model_metadata(
         }
     }
 
+    if metadata.parallel_tool_calls {
+        metadata.parallel_tool_calls = false;
+
+        if !should_update {
+            should_update = true;
+        }
+    }
+
     if should_update {
         // update the target graph with the new metadata
         update_model_metadata(chat_request.model.as_ref(), &metadata)?;

@@ -125,6 +125,10 @@ pub struct RagChatCompletionsRequest {
     /// Defaults to 1.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub n_choice: Option<u64>,
+    /// [parallel function calling](https://platform.openai.com/docs/guides/function-calling/parallel-function-calling during tool use.
+    /// Default to false.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parallel_tool_calls: Option<bool>,
     /// Whether to stream the results as they are generated. Useful for chatbots.
     /// Defaults to false.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -175,6 +179,7 @@ impl RagChatCompletionsRequest {
             temperature: self.temperature,
             top_p: self.top_p,
             n_choice: self.n_choice,
+            parallel_tool_calls: self.parallel_tool_calls,
             stream: self.stream,
             stream_options: self.stream_options.clone(),
             stop: self.stop.clone(),
@@ -208,6 +213,7 @@ impl RagChatCompletionsRequest {
             temperature: chat_completions_request.temperature,
             top_p: chat_completions_request.top_p,
             n_choice: chat_completions_request.n_choice,
+            parallel_tool_calls: chat_completions_request.parallel_tool_calls,
             stream: chat_completions_request.stream,
             stream_options: chat_completions_request.stream_options,
             stop: chat_completions_request.stop,
@@ -255,6 +261,7 @@ impl RagChatCompletionRequestBuilder {
                 temperature: None,
                 top_p: None,
                 n_choice: None,
+                parallel_tool_calls: None,
                 stream: None,
                 stream_options: None,
                 stop: None,
@@ -288,6 +295,11 @@ impl RagChatCompletionRequestBuilder {
     pub fn with_n_choices(mut self, n: u64) -> Self {
         let n_choice = if n < 1 { 1 } else { n };
         self.req.n_choice = Some(n_choice);
+        self
+    }
+
+    pub fn enable_parallel_tool_calls(mut self, flag: bool) -> Self {
+        self.req.parallel_tool_calls = Some(flag);
         self
     }
 

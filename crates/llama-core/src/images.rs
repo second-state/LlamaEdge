@@ -47,11 +47,11 @@ pub async fn image_generation(
     let id = format!("file_{}", uuid::Uuid::new_v4());
 
     // save the file
-    let path = Path::new("archives");
-    if !path.exists() {
-        fs::create_dir(path).unwrap();
+    let archives_path = Path::new("archives");
+    if !archives_path.exists() {
+        fs::create_dir(archives_path).unwrap();
     }
-    let file_path = path.join(&id);
+    let file_path = archives_path.join(&id);
     if !file_path.exists() {
         fs::create_dir(&file_path).unwrap();
     }
@@ -138,6 +138,16 @@ pub async fn image_generation(
     #[cfg(feature = "logging")]
     info!(target: "stdout", "seed: {}", seed);
 
+    // apply canny preprocessor
+    let apply_canny_preprocessor = req.apply_canny_preprocessor.unwrap_or(false);
+    #[cfg(feature = "logging")]
+    info!(target: "stdout", "apply_canny_preprocessor: {}", apply_canny_preprocessor);
+
+    // style ratio
+    let style_ratio = req.style_ratio.unwrap_or(0.2);
+    #[cfg(feature = "logging")]
+    info!(target: "stdout", "style_ratio: {}", style_ratio);
+
     ctx = ctx
         .set_prompt(&req.prompt)
         .set_negative_prompt(negative_prompt)
@@ -154,7 +164,44 @@ pub async fn image_generation(
         .set_width(width as i32)
         .set_control_strength(control_strength)
         .set_seed(seed)
+        .enable_canny_preprocess(apply_canny_preprocessor)
+        .set_style_ratio(style_ratio)
         .set_output_path(output_image_file);
+
+    // control_image
+    if let Some(control_image) = &req.control_image {
+        #[cfg(feature = "logging")]
+        info!(target: "stdout", "control_image: {:?}", control_image);
+
+        let control_image_file = Path::new("archives")
+            .join(&control_image.id)
+            .join(&control_image.filename);
+        if !control_image_file.exists() {
+            let err_msg = format!(
+                "The control image file does not exist: {:?}",
+                &control_image_file
+            );
+
+            #[cfg(feature = "logging")]
+            error!(target: "stdout", "{}", &err_msg);
+
+            return Err(LlamaCoreError::Operation(err_msg));
+        }
+
+        let path_control_image = match control_image_file.to_str() {
+            Some(path) => path,
+            None => {
+                let err_msg = "Fail to get the path of the control image.";
+
+                #[cfg(feature = "logging")]
+                error!(target: "stdout", "{}", &err_msg);
+
+                return Err(LlamaCoreError::Operation(err_msg.into()));
+            }
+        };
+
+        ctx = ctx.set_control_image(ImageType::Path(path_control_image.into()));
+    }
 
     #[cfg(feature = "logging")]
     info!(target: "stdout", "sd text_to_image context: {:?}", &ctx);
@@ -359,6 +406,16 @@ pub async fn image_edit(req: &mut ImageEditRequest) -> Result<ListImagesResponse
     #[cfg(feature = "logging")]
     info!(target: "stdout", "strength: {}", strength);
 
+    // apply canny preprocessor
+    let apply_canny_preprocessor = req.apply_canny_preprocessor.unwrap_or(false);
+    #[cfg(feature = "logging")]
+    info!(target: "stdout", "apply_canny_preprocessor: {}", apply_canny_preprocessor);
+
+    // style ratio
+    let style_ratio = req.style_ratio.unwrap_or(0.2);
+    #[cfg(feature = "logging")]
+    info!(target: "stdout", "style_ratio: {}", style_ratio);
+
     // create and dump the generated image
     ctx = ctx
         .set_prompt(&req.prompt)
@@ -372,6 +429,8 @@ pub async fn image_edit(req: &mut ImageEditRequest) -> Result<ListImagesResponse
         .set_control_strength(control_strength)
         .set_seed(seed)
         .set_strength(strength)
+        .enable_canny_preprocess(apply_canny_preprocessor)
+        .set_style_ratio(style_ratio)
         .set_output_path(output_image_file);
 
     #[cfg(feature = "logging")]

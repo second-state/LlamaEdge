@@ -74,11 +74,83 @@ pub async fn audio_transcriptions(
             }
         }
 
+        // check `detect_language` field
+        if let Some(detect_language) = &request.detect_language {
+            if *detect_language != metadata.detect_language {
+                // update the metadata
+                metadata.detect_language = *detect_language;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `offset_time` field
+        if let Some(offset_time) = &request.offset_time {
+            if *offset_time != metadata.offset_time {
+                // update the metadata
+                metadata.offset_time = *offset_time;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `duration` field
+        if let Some(duration) = &request.duration {
+            if *duration != metadata.duration {
+                // update the metadata
+                metadata.duration = *duration;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `max_context` field
+        if let Some(max_context) = &request.max_context {
+            if *max_context != metadata.max_context {
+                // update the metadata
+                metadata.max_context = *max_context;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `max_len` field
+        if let Some(max_len) = &request.max_len {
+            if *max_len != metadata.max_len {
+                // update the metadata
+                metadata.max_len = *max_len;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
         // check `temperature` field
         if let Some(temperature) = &request.temperature {
             if *temperature != metadata.temperature {
                 // update the metadata
                 metadata.temperature = *temperature;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `split_on_word` field
+        if let Some(split_on_word) = &request.split_on_word {
+            if *split_on_word != metadata.split_on_word {
+                // update the metadata
+                metadata.split_on_word = *split_on_word;
 
                 if !should_update {
                     should_update = true;
@@ -378,11 +450,83 @@ pub async fn audio_translations(
             }
         }
 
+        // check `detect_language` field
+        if let Some(detect_language) = &request.detect_language {
+            if *detect_language != metadata.detect_language {
+                // update the metadata
+                metadata.detect_language = *detect_language;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `offset_time` field
+        if let Some(offset_time) = &request.offset_time {
+            if *offset_time != metadata.offset_time {
+                // update the metadata
+                metadata.offset_time = *offset_time;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `duration` field
+        if let Some(duration) = &request.duration {
+            if *duration != metadata.duration {
+                // update the metadata
+                metadata.duration = *duration;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `max_context` field
+        if let Some(max_context) = &request.max_context {
+            if *max_context != metadata.max_context {
+                // update the metadata
+                metadata.max_context = *max_context;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `max_len` field
+        if let Some(max_len) = &request.max_len {
+            if *max_len != metadata.max_len {
+                // update the metadata
+                metadata.max_len = *max_len;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
         // check `temperature` field
         if let Some(temperature) = &request.temperature {
             if *temperature != metadata.temperature {
                 // update the metadata
                 metadata.temperature = *temperature;
+
+                if !should_update {
+                    should_update = true;
+                }
+            }
+        }
+
+        // check `split_on_word` field
+        if let Some(split_on_word) = &request.split_on_word {
+            if *split_on_word != metadata.split_on_word {
+                // update the metadata
+                metadata.split_on_word = *split_on_word;
 
                 if !should_update {
                     should_update = true;

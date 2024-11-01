@@ -319,7 +319,7 @@ async fn main() -> Result<(), ServerError> {
                 });
 
                 // initialize the core context
-                llama_core::init_core_context(None, Some(&[metadata_embedding]))
+                llama_core::init_ggml_context(None, Some(&[metadata_embedding]))
                     .map_err(|e| ServerError::Operation(format!("{}", e)))?;
             }
             _ => {
@@ -369,7 +369,7 @@ async fn main() -> Result<(), ServerError> {
                 });
 
                 // initialize the core context
-                llama_core::init_core_context(Some(&[metadata_chat]), None)
+                llama_core::init_ggml_context(Some(&[metadata_chat]), None)
                     .map_err(|e| ServerError::Operation(format!("{}", e)))?;
             }
         }
@@ -444,7 +444,7 @@ async fn main() -> Result<(), ServerError> {
         });
 
         // initialize the core context
-        llama_core::init_core_context(Some(&[metadata_chat]), Some(&[metadata_embedding]))
+        llama_core::init_ggml_context(Some(&[metadata_chat]), Some(&[metadata_embedding]))
             .map_err(|e| ServerError::Operation(format!("{}", e)))?;
     }
 

@@ -10,6 +10,10 @@ pub struct CompletionRequest {
     /// ID of the model to use.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub model: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parallel_tool_calls: Option<bool>,
+
     /// The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
     pub prompt: CompletionPrompt,
     /// Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.When used with `n_choice`, `best_of` controls the number of candidate completions and `n_choice` specifies how many to return – `best_of` must be greater than `n_choice`.
@@ -48,6 +52,7 @@ pub struct CompletionRequest {
     pub n: Option<u32>,
     /// Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
     /// Defaults to 0.0.
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub presence_penalty: Option<f32>,
     /// Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence.
@@ -88,6 +93,7 @@ fn test_serialize_completion_request() {
     {
         let request = CompletionRequest {
             model: Some("text-davinci-003".to_string()),
+            parallel_tool_calls: Some(false),
             prompt: CompletionPrompt::SingleText("Once upon a time".to_string()),
             best_of: Some(1),
             echo: Some(false),
@@ -113,6 +119,7 @@ fn test_serialize_completion_request() {
     {
         let request = CompletionRequest {
             model: None,
+            parallel_tool_calls: None,
             prompt: CompletionPrompt::MultiText(vec![
                 "Once upon a time".to_string(),
                 "There was a cat".to_string(),

@@ -9,7 +9,7 @@ endpoints.workspace = true
 chat-prompts.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-hyper = { version = "0.14", features = ["full"] }
+hyper = { version = "1.5.0", features = ["full"] }
 tokio.workspace = true
 thiserror.workspace = true
 uuid.workspace = true

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["download_file","list_files","remove_file","retrieve_file","retrieve_file_content"]};

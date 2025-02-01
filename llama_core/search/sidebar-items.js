@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ContentType"],"struct":["SearchConfig","SearchOutput","SearchResult"]};

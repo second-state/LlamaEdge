@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["WHISPER_SAMPLE_RATE"],"struct":["WhisperMetadata","WhisperMetadataBuilder"]};

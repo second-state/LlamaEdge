@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["chunk_text","dimension","embeddings"]};

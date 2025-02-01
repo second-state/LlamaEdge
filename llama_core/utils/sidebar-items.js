@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["chat_model_names","chat_prompt_template","embedding_model_names"]};
